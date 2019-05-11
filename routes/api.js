@@ -28,5 +28,6 @@ router.post("/register", (req, res) => {
     }
   });
 });
-
+// export module
 module.exports = router;
+
