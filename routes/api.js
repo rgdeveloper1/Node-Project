@@ -17,6 +17,7 @@ router.get("/", function (req, res) {
   res.send("I am from API routes");
 });
 
+// register api
 router.post("/register", (req, res) => {
   const userData = req.body;
   const user = new User(userData);
@@ -27,6 +28,25 @@ router.post("/register", (req, res) => {
       res.status(200).send(registerUser);
     }
   });
+});
+
+// login api
+router.post("/login", (req, res) => {
+  let userData = req.body;
+
+  User.findOne({ email: userData.email }, (err, user) => {
+    if (err) {
+      console.log(err);
+    } else if (!user) {
+      res.status(401).send('Invalid Email');
+    } else if(user.password !== userData.password){
+      res.status(401).send('Invalid Password');
+    }
+    else{
+      res.status(200).send(user);
+    }
+  });
+
 });
 
 module.exports = router;
