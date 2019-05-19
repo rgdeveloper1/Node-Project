@@ -2,8 +2,10 @@ const express = require("express");
 const bodyParsor = require("body-parser");
 const app = express();
 const apiRoute = require("./routes/api");
+const cors = require('cors');
+app.use(cors());
 
-
+ 
 app.use(bodyParsor.json());
 app.use('/api', apiRoute);
 app.listen(8100, () => console.log("Node Server run on port 8100!"));
