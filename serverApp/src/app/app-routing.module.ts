@@ -5,6 +5,7 @@ import { SpecialComponent } from './special/special.component';
 import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
 import { NotFoundComponent } from './not-found/not-found.component';
+import { AuthGuard } from './auth.guard';
 
 const routes: Routes = [
   {
@@ -18,7 +19,8 @@ const routes: Routes = [
   },
   {
     path: 'special',
-    component: SpecialComponent
+    component: SpecialComponent,
+    canActivate: [AuthGuard]
   },
   {
     path: 'login',

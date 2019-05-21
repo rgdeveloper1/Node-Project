@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+const jwt = require('jsonwebtoken');
 const mongoose = require("mongoose");
 const db =
   "mongodb+srv://rohitgupta:u9vPEX97yFhnm4Us@cluster0-viozg.mongodb.net/test?retryWrites=true";
@@ -20,15 +21,29 @@ router.get("/", function (req, res) {
 // register api
 router.post("/register", (req, res) => {
   const userData = req.body;
-  const user = new User(userData);
-  user.save((error, registerUser) => {
-    if (error) {
-      console.log('Error Save', error);
-    } else {
-      res.status(200).send(registerUser);
+  const user_data = new User(userData);
+
+  User.findOne({ email: userData.email }, (err, user) => {
+    if (err) {
+      console.log(err);
+    } else if (user) {
+      res.status(401).send('That Email already exists !');
+    }
+    else {
+      user_data.save((error, registerUser) => {
+        if (error) {
+          console.log('Error Save', error);
+        } else {
+          let payload = { subject: registerUser._id };
+          let token = jwt.sign(payload, 'secret key');
+          res.status(200).send({ token });
+          console.log(registerUser);
+        }
+      });
     }
   });
 });
+
 
 // login api
 router.post("/login", (req, res) => {
@@ -43,7 +58,9 @@ router.post("/login", (req, res) => {
       res.status(401).send('Invalid Password');
     }
     else {
-      res.status(200).send(user);
+      let payload = { subject: user._id };
+      let token = jwt.sign(payload, 'secret key');
+      res.status(200).send({token});
     }
   });
 
