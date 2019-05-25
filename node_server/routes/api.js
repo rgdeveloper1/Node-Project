@@ -18,6 +18,24 @@ router.get("/", function (req, res) {
   res.send("I am from API routes");
 });
 
+// verify token
+function verifyToken(req, res, next) {
+  if (!req.headers.authorization) {
+    return res.status(401).send('invalid Request');
+  }
+  let token = req.headers.authorization;
+  console.log(token);
+  if (token === 'null') {
+    return res.status(401).send('invalid Request');
+  }
+  let payload = jwt.verify(token, 'secret key');
+  if (!payload) {
+    return res.status(401).send('invalid Request');
+  }
+  req.userId= payload.subject;
+  next();
+}
+ 
 // register api
 router.post("/register", (req, res) => {
   const userData = req.body;
@@ -60,7 +78,7 @@ router.post("/login", (req, res) => {
     else {
       let payload = { subject: user._id };
       let token = jwt.sign(payload, 'secret key');
-      res.status(200).send({token});
+      res.status(200).send({ token });
     }
   });
 
@@ -103,9 +121,8 @@ router.get('/events', (req, res) => {
   res.json(events);
 });
 
-
 // special api
-router.get('/special', (req, res) => {
+router.get('/special', verifyToken, (req, res) => {
   let events = [
     {
       "_id": "1",
@@ -140,5 +157,6 @@ router.get('/special', (req, res) => {
   ];
   res.json(events);
 });
+
 
 module.exports = router;

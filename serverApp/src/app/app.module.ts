@@ -13,7 +13,7 @@ import { NotFoundComponent } from './not-found/not-found.component';
 
 import { AuthService } from './auth.service';
 import { AuthGuard } from './auth.guard';
-import { TokenInterceptorService } from './token-interceptor.service';
+import { AuthInterceptor } from './auth.interceptor';
 
 @NgModule({
   declarations: [
@@ -34,7 +34,7 @@ import { TokenInterceptorService } from './token-interceptor.service';
     AuthService, AuthGuard,
     {
       provide: HTTP_INTERCEPTORS,
-      useClass: TokenInterceptorService,
+      useClass: AuthInterceptor,
       multi: true
     }
   ],

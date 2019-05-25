@@ -20,7 +20,7 @@ const routes: Routes = [
   {
     path: 'special',
     component: SpecialComponent,
-    canActivate: [AuthGuard]
+    // canActivate: [AuthGuard]
   },
   {
     path: 'login',

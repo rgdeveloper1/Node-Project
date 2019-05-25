@@ -13,7 +13,7 @@ export class LoginComponent implements OnInit {
   error = false;
   login_msg = false;
 
-  storedToken = [];
+  storedToken;
   constructor(private fb: FormBuilder, private auth: AuthService, private router: Router) { }
 
   ngOnInit() {
@@ -25,13 +25,13 @@ export class LoginComponent implements OnInit {
   onLogin() {
     this.auth.login(this.loginForm.value).subscribe(
       (res) => {
-        this.storedToken.push(res);
+        this.storedToken = res;
         console.log(this.storedToken);
         this.error = false;
         this.login_msg = true;
         this.router.navigate(['/events']);
         this.loginForm.reset();
-        localStorage.setItem('token' , this.storedToken[0].token);
+        localStorage.setItem('token', this.storedToken.token);
       },
       (err) => {
         console.log(err);
